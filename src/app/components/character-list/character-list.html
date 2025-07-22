@@ -1,39 +1,55 @@
 <div class="character-container">
 
+  <!-- 🔍 Buscador -->
   <div class="search-container">
-    <input 
+    <input
+      type="text"
       placeholder="Buscar personajes..."
-      /> <!-- Enlazar a searchTerm con [(ngModel)] y llamar a onSearchKeyup($event) en (keyup) -->
-    
-    <button>Buscar</button> <!-- Enlazar (click) a onSearch() -->
+      [(ngModel)]="searchTerm"
+      (keyup)="onSearchKeyup($event)"
+    />
+    <button (click)="onSearch()">Buscar</button>
   </div>
 
-  <!--loading es verdadero  -->
-  @if (true) {
+  <!-- ⏳ Estado de carga -->
+  @if (loading) {
     <div class="loading-state">
       <p>Cargando personajes...</p>
     </div>
   }
-  
-  <!-- errorMessage tiene contenido  -->
-  @if (true) {
+
+  <!-- ❌ Error al cargar o buscar -->
+  @if (errorMessage) {
     <div class="error-state">
-      <p><!-- Mostrar errorMessage aquí --></p>
+      <p>{{ errorMessage }}</p>
     </div>
   }
 
-  <!-- no cargando Y hay personajes  -->
-  @if (true) {
+  <!-- ✅ Lista de personajes -->
+  @if (!loading && hasCharacters()) {
     <div class="character-grid">
-      <!-- loop for con señal de personajes  -->
+      @for (character of characters(); track character.id) {
+        <div class="character-card">
+          <img
+            [src]="character.image"
+            [alt]="character.name"
+            class="character-image"
+          />
+          <div class="character-info">
+            <h3>{{ character.name }}</h3>
+            <p>Status: {{ character.status }}</p>
+            <p>Species: {{ character.species }}</p>
+          </div>
+        </div>
+      }
     </div>
   }
 
-    <!-- no cargando Y no hay error Y no hay personajes  -->
-  @if (true) {
+  <!-- 😕 Estado vacío -->
+  @if (!loading && !errorMessage && !hasCharacters()) {
     <div class="empty-state">
       <p>No se encontraron personajes con ese término de búsqueda.</p>
     </div>
   }
-  
+
 </div>
